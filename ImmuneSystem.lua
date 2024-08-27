@@ -1,5 +1,5 @@
 --[[
-	Writer: @SCPF_RedSky
+	Writer: @SCPF_RedSky (most of the time)
 	Name : ImmuneSystem.lua
 	Date : 8/24/24
 	ClassName : ModuleScript
