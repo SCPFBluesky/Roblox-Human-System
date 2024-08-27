@@ -1,6 +1,6 @@
 --[[
 	Writer: @SCPF_RedSky (most of the time)
-	Name : MainScript.lua
+	Name : StartServer.lua
 	Date : 8/24/24
 	ClassName : Script
 	RunTime: Server
@@ -24,7 +24,6 @@
 	The `simulateBody` function continuously updates the player's physiological systems while the player’s character exists in the game.
 --]]
 --!nonstrict
-local Debugging = true
 local Overture = require(game.ReplicatedStorage.Overture)
 local CirculatorySystem = Overture:LoadLibrary("CirculatorySystem")
 local RespiratorySystem = Overture:LoadLibrary("RespiratorySystem")
@@ -32,22 +31,23 @@ local ImmuneSystem = Overture:LoadLibrary("ImmuneSystem")
 local Brain = Overture:LoadLibrary("Brain")
 local NervousSystem = Overture:LoadLibrary("NervousSystem")
 local Zone = Overture:LoadLibrary("Zone")
-
+local UnconsciousEvent = game.ReplicatedStorage:WaitForChild("UnconsciousEvent")
 
 local function addAttributes(player)
-	player:SetAttribute("Walkspeed", 16) 
+	player:SetAttribute("Walkspeed", 16) -- Default walkspeed
 	player:SetAttribute("ImmunityLevel", math.random(50, 100))
 	player:SetAttribute("InfectionLevel", 0)
 	player:SetAttribute("CurrentDisease", "")
 	player:SetAttribute("CurrentSymptoms", "")
 	player:SetAttribute("MentalHealthDisorder", "")
-	player:SetAttribute("BodyTemperature", 98.6) 
+	player:SetAttribute("BodyTemperature", 98.6)
 	player:SetAttribute("BreathRate", 12) 
-	player:SetAttribute("BloodPressure", 12)
+	player:SetAttribute("BloodPressure", 12) 
 end
 
 local function setupTemperatureZones(player, nervousSystem)
 	local zones = {}
+
 	for _, part in pairs(game.Workspace.Temperatures:GetChildren()) do
 		if part:IsA("BasePart") then
 			local zone = Zone.new(part)
@@ -70,10 +70,10 @@ local function setupTemperatureZones(player, nervousSystem)
 					end
 				end)
 			else
-				warn("No Temp value found in part:", part.Name)
+				--warn("nope")
 			end
 		else
-			warn("Ignored non-BasePart in Temperatures folder:", part.Name)
+			--warn("ignore")
 		end
 	end
 end
@@ -87,25 +87,21 @@ local function simulateBody(player)
 
 	setupTemperatureZones(player, nervousSystem)
 
-	if math.random() < 0.2 then 
+	if math.random() < 0.2 then
 		humanImmune:Infect("Cold")
-		warn("Player has caught a cold.")
 	end
-	if math.random() < 0.1 then 
+	if math.random() < 0.1 then
 		humanImmune:Infect("Flu")
-		warn("Player has caught the flu.")
 	end
-	if math.random() < 0.05 then 
+	if math.random() < 0.05 then
 		humanImmune:Infect("Rabies")
-		warn("Player has caught rabies.")
 	end
 
 	while player.Character and player.Character.Parent do
 		humanImmune:Update()
 		humanCirculatory:Update()
-		--humanRespiratory:Update()
 		brain:Update()
---		nervousSystem:Update()
+		--nervousSystem:Update()
 
 		task.wait(1)
 	end
