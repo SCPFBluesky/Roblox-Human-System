@@ -1,5 +1,5 @@
 --[[
-	Writer: @SCPF_RedSky (most of the time)
+	Writer: @SCPF_RedSky
 	Name : ImmuneSystem.lua
 	Date : 8/24/24
 	ClassName : ModuleScript
@@ -21,7 +21,6 @@
 --]]
 --!nonstrict
 local ImmuneSystem = {}
-local Debugging = true
 ImmuneSystem.__index = ImmuneSystem
 local CoughSounds = {
 	"2637490235",
@@ -42,6 +41,7 @@ function ImmuneSystem:FightInfection()
 	if infectionLevel > 0 then
 		infectionLevel = math.clamp(infectionLevel - (immunityLevel / 10), 0, 100)
 		self.player:SetAttribute("InfectionLevel", infectionLevel)
+		warn("Fighting infection, new infection level: " .. infectionLevel)
 
 		if infectionLevel == 0 then
 			self:CureDisease()
@@ -72,7 +72,7 @@ function ImmuneSystem:TriggerSymptoms()
 		warn("Rabies symptoms triggered.")
 		self:StartSymptomCoroutine(function()
 			while true do
-          -- not done yet
+					--notdone
 				wait(1)
 			end
 		end)
@@ -83,6 +83,7 @@ function ImmuneSystem:TriggerSymptoms()
 		self.TimeUntillCure = 5 * 60
 		self.CanImmuneSystemFight = true
 		self.player:SetAttribute("CurrentSymptoms", "Coughing, Fever")
+		warn("Cold symptoms triggered.")
 		local feverBlur = game.Lighting:FindFirstChild("FeverBlur")
 		if feverBlur then
 			feverBlur.Enabled = true
@@ -104,7 +105,6 @@ function ImmuneSystem:TriggerSymptoms()
 		if feverBlur then
 			feverBlur.Enabled = true
 		end
-		warn("Flu symptoms triggered.")
 		self:StartSymptomCoroutine(function()
 			while true do
 				wait(1)
@@ -143,7 +143,6 @@ function ImmuneSystem:CureDisease()
 	if feverBlur then
 		feverBlur.Enabled = false
 	end
-	warn("Disease cured, all symptoms removed.")
 	if self.symptomCoroutine then
 		coroutine.close(self.symptomCoroutine)
 		self.symptomCoroutine = nil
