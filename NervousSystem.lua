@@ -20,17 +20,16 @@
 --!nonstrict
 local NervousSystem = {}
 NervousSystem.__index = NervousSystem
-local Debugging = true
+
 function NervousSystem.new(player)
 	local self = setmetatable({}, NervousSystem)
 	self.player = player
-	self.bodyTemp = player:GetAttribute("BodyTemperature") or 98.6
-	self.targetTemp = 98.6 
+	self.bodyTemp = player:GetAttribute("BodyTemperature") or 98.6 
+	self.targetTemp = 98.6
 	return self
 end
 
 function NervousSystem:HandleTemperatureChange(temp, action)
-	warn("Handling temperature change. Action:", action, "Zone Temp:", temp, "Current Body Temp:", self.bodyTemp)
 
 	if action == "enter" then
 		self.targetTemp = temp
@@ -40,7 +39,7 @@ function NervousSystem:HandleTemperatureChange(temp, action)
 end
 
 function NervousSystem:UpdateTemperature()
-	local changeRate = 0.05
+	local changeRate = 0.05 
 	local recoveryRate = 0.1 
 
 	if self.bodyTemp > self.targetTemp then
@@ -59,7 +58,7 @@ function NervousSystem:CheckTemperatureEffects()
 	if self.bodyTemp < 95 then
 		self.player:SetAttribute("BreathRate", self.player:GetAttribute("BreathRate") - 1)
 		if self.bodyTemp < 90 then
-			self.player.Character:BreakJoints() 
+			self.player.Character:BreakJoints() -- Simulate death by respiratory failure
 		end
 	elseif self.bodyTemp > 107 then
 		self.player.Character.Humanoid.Health = self.player.Character.Humanoid.Health - 10
